@@ -17,7 +17,13 @@ int main() {
         printf("wait write...\n");
         usleep(1000*1000);
     }
-    printf("read data success.\n");
+    printf("read data: %s.\n", data);
+
+    int ret = shmctl(shmid, IPC_RMID, NULL);
+    if (ret < 0) {
+        printf("rm shm error<%s>\n", strerror(errno));
+    }
+    printf("rm shm success.\n");
 
     printf("shm read end...\n");
     return 0;
