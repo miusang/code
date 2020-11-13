@@ -13,7 +13,7 @@ $(TARGET):$(OBJS)
 	$(CC) -o $@ $^
 
 %.o:%.c
-	$(CC) $(INC) -o $@ -c $<
+	$(CC) $(INC) -o $@ -c $< -g
 
 .PHONY:clean
 clean:

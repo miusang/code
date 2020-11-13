@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include "tree.h"
 
+
 int insert(struct Node **root, int val);
 int delete(struct Node **root, int val);
 
@@ -19,17 +20,21 @@ struct Node* findMin(struct Node **root, struct Node **parent);
 
 void array_print(int *nums, int len);
 int main(int argc, const char*argv[]) {
+    int MAX = 300;
     if (argc < 2) {
         return 0;
     }
     
     int len = atoi(argv[1]);
+    if (len >= MAX) {
+        return 0;
+    }
     int *nums = (int *) malloc(len * sizeof(int));
     struct Node *root = NULL;
     struct Node *node = NULL;
     int i = 0;
     while (i < len) {
-        int val = rand() % 300;
+        int val = rand() % MAX;
         if (insert(&root, val) == 0) {
             nums[i] = val;
             i++;
@@ -44,7 +49,6 @@ int main(int argc, const char*argv[]) {
         if(delete(&root, nums[i]) == 0) {
             i++;
         }
-        printf("\n");
     }
     free(nums);
     return 0;
@@ -58,9 +62,6 @@ void array_print(int *nums, int len) {
 }
 
 int insert(struct Node **root, int val) {
-    struct Node *node = (struct Node*) malloc(sizeof(struct Node));
-    node->val = val;
-
     struct Node *pre = NULL;
     struct Node *cur = *root;
     while (cur != NULL) {
@@ -75,6 +76,8 @@ int insert(struct Node **root, int val) {
             cur = cur->left;
         }
     }
+    struct Node *node = (struct Node*) malloc(sizeof(struct Node));
+    node->val = val;
     if (pre == NULL) {
         *root = node;
         return 0;
