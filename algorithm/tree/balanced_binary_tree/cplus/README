@@ -1,0 +1,5 @@
+how to run:
+make
+./demo 467
+or
+valgrind --tool=memcheck --leak-check=full ./demo 568
