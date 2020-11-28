@@ -1,12 +1,13 @@
 #include "red_black_tree.h"
 #include <stddef.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 static struct Node* find(struct Node *root, int val);
-static struct Node* findMax(struct Node *root);
-static struct Node* findMin(struct Node *root);
+static struct Node* find_max(struct Node *root);
+static struct Node* find_min(struct Node *root);
 static void insert_balance(struct Node **root, struct Node *node);
-static void delete_balance(struct Node **root, struct Node *node);
+static void delete_balance(struct Node **root, struct Node *node, bool flag);
 static void left_rotate(struct Node **root, struct Node *node);
 static void right_rotate(struct Node **root, struct Node *node);
 
@@ -47,10 +48,11 @@ bool delete(struct Node **root, int val) {
     if (node == NULL) {
         return false;
     }
-    struct Node *replace = findMax((*root)->left);
+    struct Node *replace = find_max(node->left);
     if (replace == NULL) {
-        replace = findMin((*root)->right);
+        replace = find_min(node->right);
     }
+    bool flag;
     if (replace == NULL) { // 叶子节点
         if (node->parent == NULL) {
             *root = NULL;
@@ -59,20 +61,22 @@ bool delete(struct Node **root, int val) {
         }
         if (node == node->parent->left) {
             node->parent->left = NULL;
+            flag = true;
         } else {
             node->parent->right = NULL;
+            flag = false;
         }
-        if (node->color == black) {
-            delete_balance(root, node);
-        }
+        delete_balance(root, node, flag);
         free(node);
         return true;
     }
     if (replace->val > val) { // 后继
         if (replace == replace->parent->left) {
             replace->parent->left = replace->right;
+            flag = true;
         } else {
             replace->parent->right = replace->right;
+            flag = false;
         }
         if (replace->right != NULL) {
             replace->right->parent = replace->parent;
@@ -80,17 +84,18 @@ bool delete(struct Node **root, int val) {
     } else {
         if (replace == replace->parent->left) {
             replace->parent->left = replace->left;
+            flag = true;
         } else {
             replace->parent->right = replace->left;
+            flag = false;
         }
         if (replace->left != NULL) {
             replace->left->parent = replace->parent;
         }
     }
+    //printf("%s line:%d\n", __func__, __LINE__);
     node->val = replace->val;
-    if (replace->color == black) {
-        delete_balance(root, replace);
-    }
+    delete_balance(root, replace, flag);
     free(replace);
     return true;
 }
@@ -142,9 +147,70 @@ static void insert_balance(struct Node **root, struct Node *node) {
     }
 }
 
-static void delete_balance(struct Node **root, struct Node *node) {
-    // case 2
-
+// flag == true 表示被删除节点是其父节点的左子树根节点
+static void delete_balance(struct Node **root, struct Node *node, bool flag) {
+    while (node != NULL && node->parent != NULL && node->color == black) {
+        struct Node *p = node->parent;
+        struct Node *w = NULL;
+        if (flag) {
+            w = p->right;
+            if (get_color(w) == red) {
+                w->color = black;
+                p->color = red;
+                left_rotate(root, p);
+                w = p->right;
+            }
+            if (get_color(w->left) == black && get_color(w->right) == black) {
+                w->color = red;
+                node = p;
+            } else {
+                if (get_color(w->right) == black) {
+                    w->left->color = black;
+                    w->color = red;
+                    right_rotate(root, w);
+                    w = p->right;
+                }
+                w->color = p->color;
+                p->color = black;
+                w->right->color = black;
+                left_rotate(root, p);
+                node = *root;
+                continue;
+            }
+            if (node->parent != NULL) {
+                flag = node == node->parent->left;
+            }
+            continue;
+        } 
+        w = p->left;
+        if (get_color(w) == red) {
+            w->color = black;
+            p->color = red;
+            right_rotate(root, p);
+            w = p->left;
+        }
+        if (get_color(w->left) == black && get_color(w->right) == black) {
+            w->color = red;
+            node = p;
+        } else {
+            if (get_color(w->left) == black) {
+                w->right->color = black;
+                w->color = red;
+                left_rotate(root, w);
+                w = p->left;
+            }
+            w->color = p->color;
+            p->color = black;
+            w->left->color = black;
+            right_rotate(root, p);
+            node = *root;
+            continue;
+        }
+        if (node->parent != NULL) {
+            flag = node == node->parent->left;
+        }
+    }
+    node->color = black;
 }
 
 static void left_rotate(struct Node **root, struct Node *node) {
@@ -209,15 +275,15 @@ static struct Node* find(struct Node *root, int val) {
     return NULL;
 }
 
-static struct Node* findMax(struct Node *root) {
-    while (root != NULL || root->right != NULL) {
+static struct Node* find_max(struct Node *root) {
+    while (root != NULL && root->right != NULL) {
         root = root->right;
     }
     return root;
 }
 
-static struct Node* findMin(struct Node *root) {
-    while (root != NULL || root->left != NULL) {
+static struct Node* find_min(struct Node *root) {
+    while (root != NULL && root->left != NULL) {
         root = root->left;
     }
     return root;

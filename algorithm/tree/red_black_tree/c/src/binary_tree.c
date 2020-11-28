@@ -58,15 +58,20 @@ void push(struct NodeLink **list, struct Node *node) {
 }
 
 void push_back(struct NodeLink **list, struct Node *node) {
+    if (list == NULL) {
+        return;
+    }
     struct NodeLink *item = (struct NodeLink*) malloc(sizeof(struct NodeLink));
     item->node = node;
-    struct NodeLink *cur = *list;
-    while (cur != NULL && cur->next != NULL) {
-        cur = cur->next;
-    }
-    if (cur == NULL) {
+    item->next = NULL;
+    if (*list == NULL) {
         *list = item;
         return;
+    }
+    struct NodeLink *cur = *list;
+    while (cur != NULL && cur->next != NULL) {
+        //printf("%s line:%d\n", __func__, __LINE__);
+        cur = cur->next;
     }
     cur->next = item;
 }

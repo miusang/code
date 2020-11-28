@@ -21,6 +21,14 @@ int main(int argc, const char*argv[]) {
     array_print(nums, len);
     inorder_visit(root);
     level_visit(root);
+    for (int i = 0; i < len; i++) {
+        printf("delete val:%d\n", nums[i]);
+        delete(&root, nums[i]);
+        inorder_visit(root);
+        level_visit(root);
+        printf("\n");
+    }
+    free(nums);
     return 0;
 }
 

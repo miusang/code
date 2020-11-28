@@ -33,19 +33,31 @@
 |  rR:左旋  lR:右旋  cC:改变颜色  ↑:向上迭代                |
 +-----------------------------------------------------------+
 
-+------------------------------------------------------------+
-|                          delete                            |
-|------------------------------------------------------------|
-| case | node  | parent | brother | brother_child |  action  |
-|  1   | red   |   *    |    *    |      *        |    -     |
-|  2   | black |  red   |    *    |     |red      | *R && cC |
-|  3   | black |  red   |    *    |     &black    |    cC    |
-|  4   | black | black  |   red   |      *        |    =>?   |
-|  5   | black | black  |  black  |     |red      | *R &| cC |
-|  6   | black | black  |  black  |    &black     | cC && ↑  |
-|------------------------------------------------------------|
-| *R: 左旋或右旋  cC: 改变颜色  ↑: 向上迭代                  |
-| |red: 左右节点有一个是红色    &black:左右节点全部为黑色    |
-| =>: 转化为指向的状态                                       |
-| &|: 根据调节决定是否执行后边紧接着的操作                   |
-+------------------------------------------------------------+
+
++-------------------------------------------------------------------------+
+|                delete算法导论RB-DELETE-FIXUP(T, x)                      |
+|-------------------------------------------------------------------------|
+|while x ≠ root[T] and color[x] = BLACK                                   |
+|    do if x = left[p[x]]                                                 |
+|          then w ← right[p[x]]                                           |
+|               if color[w] = RED                                         |
+|                  then color[w] ← BLACK                           Case 1 |
+|                       color[p[x]] ← RED                          Case 1 |
+|                       LEFT-ROTATE(T, p[x])                       Case 1 |
+|                       w ← right[p[x]]                            Case 1 |
+|               if color[left[w]] = BLACK and color[right[w]] = BLACK     |
+|                   then color[w] ← RED                            Case 2 |
+|                        x ← p[x]                                  Case 2 |
+|                   else if color[right[w]] = BLACK                       |
+|                           then color[left[w]] ← BLACK            Case 3 | 
+|                                color[w] ← RED                    Case 3 | 
+|                                RIGHT-ROTATE(T, w)                Case 3 | 
+|                                w ← right[p[x]]                   Case 3 | 
+|                         color[w] ← color[p[x]]                   Case 4 | 
+|                         color[p[x]] ← BLACK                      Case 4 | 
+|                         color[right[w]] ← BLACK                  Case 4 | 
+|                         LEFT-ROTATE(T, p[x])                     Case 4 | 
+|                         x ← root[T]                              Case 4 | 
+|        else (same as then clause with "right" and "left" exchanged)     |
+|color[x] ← BLACK                                                         |
++-------------------------------------------------------------------------+
