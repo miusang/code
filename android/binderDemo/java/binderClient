@@ -1,0 +1,4 @@
+#!/system/bin/sh
+base=/system
+export CLASSPATH=$base/binderClient.jar
+exec app_process $base/bin com.atom.binderdemo.DemoClient
