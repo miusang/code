@@ -1,0 +1,17 @@
+cc_binary {
+    relative_install_path: "hw",
+    defaults: ["hidl_defaults"],
+    name: "democlient",
+    proprietary: true,
+    srcs: ["main.cpp"],
+
+    shared_libs: [
+        "liblog",
+        "libhardware",
+        "libhidlbase",
+        "libhidltransport",
+        "libutils",
+        "atom.hardware.demo@1.0",
+    ],
+
+}

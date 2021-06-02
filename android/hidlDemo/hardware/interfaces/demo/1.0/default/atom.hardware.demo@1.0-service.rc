@@ -1,0 +1,4 @@
+service demo-hal-1-0 /vendor/bin/hw/atom.hardware.demo@1.0-service
+    class hal
+    user system
+    group system

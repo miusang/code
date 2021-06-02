@@ -1,0 +1,24 @@
+cc_binary {
+    name: "atom.hardware.demo@1.0-service",
+    proprietary: true,
+    defaults: ["hidl_defaults"],
+    relative_install_path: "hw",
+    srcs: [
+        "service.cpp",
+        "impl/Demo.cpp",
+    ],
+
+    init_rc: ["atom.hardware.demo@1.0-service.rc"],
+
+    shared_libs: [
+        "atom.hardware.demo@1.0",
+        "liblog",
+        "libcutils",
+        "libbase",
+        "libbinder",
+        "libutils",
+        "libhardware",
+        "libhidlbase",
+        "libhidltransport",
+    ],
+}
