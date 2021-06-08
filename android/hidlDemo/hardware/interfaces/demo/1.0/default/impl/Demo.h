@@ -20,9 +20,13 @@ using ::android::hardware::Return;
 using ::android::hardware::Void;
 using ::android::sp;
 
-struct Demo : public IDemo {
+class Demo : public IDemo {
+public:
+    Demo();
     // Methods from ::atom::hardware::demo::V1_0::IDemo follow.
     Return<int32_t> test() override;
+    Return<void> getMem(getMem_cb _hidl_cb) override;
+    MemoryBlock block;
 
     // Methods from ::android::hidl::base::V1_0::IBase follow.
 

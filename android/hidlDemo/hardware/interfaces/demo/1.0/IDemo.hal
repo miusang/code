@@ -1,4 +1,5 @@
 package atom.hardware.demo@1.0;
 interface IDemo {
     test() generates(int32_t ret);
+    getMem() generates(MemoryBlock block);
 };

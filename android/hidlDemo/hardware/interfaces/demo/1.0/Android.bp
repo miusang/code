@@ -5,12 +5,14 @@ hidl_interface {
     root: "atom.hardware",
     product_specific: true,
     srcs: [
+        "types.hal",
         "IDemo.hal",
     ],
     interfaces: [
         "android.hidl.base@1.0",
+        "android.hidl.memory@1.0",
     ],
-    gen_java: true,
+    gen_java: false,
 }
 
 hidl_package_root {

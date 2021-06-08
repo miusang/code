@@ -11,6 +11,8 @@ cc_binary {
         "libhidlbase",
         "libhidltransport",
         "libutils",
+        "android.hidl.memory@1.0",
+        "libhidlmemory",
         "atom.hardware.demo@1.0",
     ],
 

@@ -1,0 +1,7 @@
+package atom.hardware.demo@1.0;
+import android.hidl.memory@1.0::IMemory;
+
+struct MemoryBlock {
+    memory mem;
+    uint32_t size;
+};

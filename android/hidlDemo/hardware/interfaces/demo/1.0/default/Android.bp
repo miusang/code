@@ -20,5 +20,8 @@ cc_binary {
         "libhardware",
         "libhidlbase",
         "libhidltransport",
+        "android.hidl.memory@1.0",
+        "libhidlmemory",
+        "android.hidl.allocator@1.0",
     ],
 }
